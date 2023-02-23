@@ -1,16 +1,18 @@
 import pygame
+from .constants import BLACK, GREEN, YELLOW
 
 class Square(pygame.sprite.Sprite):
     def __init__(self, pos, size):
         super().__init__()
         self.pos = pos
-        self.color = (0,255,0)
+        self.color = GREEN
         self.size = size
         self.image = pygame.Surface((size, size))
         self.image.fill(self.color)
-        pygame.draw.rect(self.image, (0,0,0), (0, 0, size, size), width=2)
+        pygame.draw.rect(self.image, BLACK, (0, 0, size, size), width=2)
         self.rect = self.image.get_rect()
         self.rect.topleft = pos
+        self.player = 0 # -1 = black, 0 = empty, 1 = white
     
     def update(self):
         pass
@@ -20,3 +22,9 @@ class Square(pygame.sprite.Sprite):
         if x >= self.rect.left and x <= self.rect.right and y >= self.rect.top and y <= self.rect.bottom:
             return True
         return False
+
+    def setColor(self, color):
+        #make square the color
+        self.image.fill(color)
+        #redraw border
+        pygame.draw.rect(self.image, BLACK, (0, 0, self.size, self.size), width=2)
