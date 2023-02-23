@@ -1,5 +1,5 @@
 import pygame
-from .constants import BLACK, GREEN, YELLOW
+from .constants import BLACK, GREEN, YELLOW, WHITE
 
 class Square(pygame.sprite.Sprite):
     def __init__(self, pos, size):
@@ -28,3 +28,11 @@ class Square(pygame.sprite.Sprite):
         self.image.fill(color)
         #redraw border
         pygame.draw.rect(self.image, BLACK, (0, 0, self.size, self.size), width=2)
+    
+    """
+    Place player's colored piece on square, update square's player status
+    """
+    def placePiece(self, playerNum):
+        color = BLACK if playerNum == -1 else WHITE
+        self.player = playerNum
+        pygame.draw.circle(self.image, color, (self.size//2, self.size//2), self.size//3)

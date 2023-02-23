@@ -1,4 +1,4 @@
-import pygame
+import pygame, sys
 import othello.constants as const
 from othello.classes import *
 
@@ -10,8 +10,18 @@ pygame.display.set_caption('Othello')
 squares = []
 for k in range(0, const.HEIGHT, const.HEIGHT//8):
     for i in range(0, const.WIDTH, const.WIDTH//8):
-        print(i, k)
         square = Square((i, k), const.WIDTH//8)
+        #starting position
+        if k//(const.HEIGHT//8) == 3:
+            if i//(const.WIDTH//8) == 3:
+                square.placePiece(1)
+            elif i//(const.WIDTH//8) == 4:
+                square.placePiece(-1)
+        if k//(const.HEIGHT//8) == 4:
+            if i//(const.WIDTH//8) == 3:
+                square.placePiece(-1)
+            if i//(const.WIDTH//8) == 4:
+                square.placePiece(1)
         WINDOW.blit(square.image, square.rect)
         squares.append(square)
 
@@ -33,7 +43,8 @@ def main():
         #process events
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                run = False
+                pygame.quit()
+                sys.exit()
             if event.type == pygame.MOUSEBUTTONDOWN:
                 mouseDown = True
         #loop over squares and check for mouse actions
@@ -44,8 +55,7 @@ def main():
                 if square.rect.collidepoint(pygame.mouse.get_pos()):
                     #if mouse is hovered over square AND mouseDown, place a piece
                     if mouseDown:
-                        square.setColor(colorwheel[playerTurn])
-                        square.player = playerTurn
+                        square.placePiece(playerTurn)
                         playerTurn *= -1
                     #otherwise, color yellow
                     else:
