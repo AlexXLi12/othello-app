@@ -1,23 +1,11 @@
 from .classes import Square
-
-neighbors = []
-for k in range(64):
-    curr = []
-    if k % 8 != 7: curr.append(k+1)
-    if k % 8 != 0: curr.append(k-1)
-    if k-8 >= 0: curr.append(k-8)
-    if k+8 <= 63: curr.append(k+8)
-    if k+9 <= 63: curr.append(k+9)
-    if k-9 >= 0: curr.append(k-9)
-    if k+7 <= 63: curr.append(k+7)
-    if k-7 >= 0: curr.append(k-7)
-    neighbors.append(curr)
+from .constants import *
 
 def possibleMoves(board:list, player:int):
     """Return the list of indices of possible moves for the player specified.
 
     Args:
-        board (list): list of Square objects representing the Othello board
+        board (list[Square]): list of Square objects representing the Othello board
         player (int): int which specifies whose turn it is (-1 == black, 1 == white)
 
     Returns:
@@ -51,7 +39,7 @@ def updateBoard(board:list, player:int, move:int):
     """Play the move on the board, flipping appropriate tiles
 
     Args:
-        board (list): list of Square objects representing the Othello board
+        board (list[Square]): list of Square objects representing the Othello board
         player (int): int which specifies whose turn it is (-1 == black, 1 == white)
         move (int): index of move
     """
@@ -72,7 +60,7 @@ def checkMove(board, idx, nbrIdx, target):
     """Check if move is valid
 
     Args:
-        board (list): list of Square objects representing the Othello board
+        board (list[Square]): list of Square objects representing the Othello board
         idx (int): index of origin piece
         nbrIdx (int): index of opposing player's neighboring tile
         target (int): int which specifies whose turn it is (-1 == black, 1 == white)

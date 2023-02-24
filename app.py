@@ -2,7 +2,7 @@ import pygame, sys
 import othello.constants as const
 from othello.classes import *
 from othello.rules import *
-
+import othello.engine as engine
 # initialization
 WINDOW = pygame.display.set_mode((const.WIDTH,const.HEIGHT))
 pygame.display.set_caption('Othello')
@@ -25,7 +25,6 @@ for k in range(0, const.HEIGHT, const.HEIGHT//8):
                 square.placePiece(1)
         WINDOW.blit(square.image, square.rect)
         board.append(square)
-
 
 #if playerTurn =-1, color = colorwheel[-1] = const.BLACK;
 #if playerTurn = 1, color = colorwheel[1] = const.WHITE;
@@ -71,7 +70,9 @@ def main():
                 if mouseDown:
                     resetPossibles(WINDOW,board) #reset previously marked "possible" squares
                     board = updateBoard(board,playerTurn,idx)
-                    playerTurn *= -1
+                    #engine move
+                    engine_idx = engine.calcMove(board, playerTurn*-1)
+                    board = updateBoard(board, playerTurn*-1, engine_idx)
                     possibles = possibleMoves(board, playerTurn)
                     break
             #update square onto window
