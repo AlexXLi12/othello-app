@@ -1,8 +1,14 @@
 import pygame
-from .constants import BLACK, GREEN, YELLOW, WHITE
+from .constants import BLACK, GREEN, WHITE
 
 class Square(pygame.sprite.Sprite):
     def __init__(self, pos, size):
+        """_summary_
+
+        Args:
+            pos (_type_): _description_
+            size (_type_): _description_
+        """
         super().__init__()
         self.pos = pos
         self.color = GREEN
@@ -25,6 +31,7 @@ class Square(pygame.sprite.Sprite):
 
     def setColor(self, color):
         #make square the color
+        self.color = color
         self.image.fill(color)
         #redraw border
         pygame.draw.rect(self.image, BLACK, (0, 0, self.size, self.size), width=2)
