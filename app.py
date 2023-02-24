@@ -69,7 +69,6 @@ def main():
             if square.rect.collidepoint(pygame.mouse.get_pos()):
                 #if mouse is hovered over square AND mouseDown, place a piece
                 if mouseDown:
-                    print(possibles)
                     resetPossibles(WINDOW,board) #reset previously marked "possible" squares
                     board = updateBoard(board,playerTurn,idx)
                     playerTurn *= -1

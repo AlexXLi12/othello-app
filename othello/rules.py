@@ -86,7 +86,6 @@ def checkMove(board, idx, nbrIdx, target):
     nextIdx = nbrIdx
     if abs(diff) == 8: #vertical case
         while nextIdx >= 0 and nextIdx <= 63:
-            print(board[nextIdx].player)
             if board[nextIdx].player == target:
                 return nextIdx
             if board[nextIdx].player != ignore:
