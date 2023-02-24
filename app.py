@@ -3,6 +3,7 @@ import othello.constants as const
 from othello.classes import *
 from othello.rules import *
 import othello.engine as engine
+from tkinter import messagebox
 # initialization
 WINDOW = pygame.display.set_mode((const.WIDTH,const.HEIGHT))
 pygame.display.set_caption('Othello')
@@ -41,7 +42,6 @@ def resetPossibles(window, board):
         if square.color == const.YELLOW:
             square.setColor(GREEN)
             window.blit(square.image, square.rect)
-
 # main function
 def main():
     global board
@@ -61,6 +61,14 @@ def main():
             if event.type == pygame.MOUSEBUTTONDOWN:
                 mouseDown = True
         #loop over board and check for mouse actions
+        if len(possibles) == 0:
+            engine_idx = engine.calcMove(board, playerTurn*-1)
+            if engine_idx == -1: #no possible moves
+                run = False
+                break
+            else:
+                board = updateBoard(board, playerTurn*-1, engine_idx)
+                possibles = possibleMoves(board, playerTurn)
         for idx in possibles:
             square = board[idx]
             square.setColor(const.YELLOW)
@@ -70,6 +78,10 @@ def main():
                 if mouseDown:
                     resetPossibles(WINDOW,board) #reset previously marked "possible" squares
                     board = updateBoard(board,playerTurn,idx)
+                    #update to show player has moved before engine move
+                    for sq in board:
+                        WINDOW.blit(sq.image, sq.rect)
+                        pygame.display.update()
                     #engine move
                     engine_idx = engine.calcMove(board, playerTurn*-1)
                     board = updateBoard(board, playerTurn*-1, engine_idx)
@@ -79,6 +91,7 @@ def main():
         for square in board:
             WINDOW.blit(square.image, square.rect)
         pygame.display.update()
+    
 
 if __name__ == '__main__':
     main()

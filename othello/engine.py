@@ -1,8 +1,9 @@
 from .constants import *
 from .classes import Square
-
+import time
 moveBoards = {}
-
+intermediate_move = -1
+LIMIT_AB = 6
 def sortMoves(possibles):
     cnrs = [*possibles & corners]
     asqrs = [*possibles & asquares]
@@ -18,10 +19,17 @@ def calcMove(board:list[Square], player:int):
     """
     board = ''.join(['X' if square.player == -1 else 'O' if square.player == 1 else '.'for square in board])
     token = 'X' if player == -1 else 'O'
+    #board is filled
+    if '.' not in board:
+        return -1
+    startTime = time.process_time()
     #default depth 6
-    return alphabeta(board, token, float("-inf"), float("inf"), 6)[1]
+    return alphabeta(board, token, float("-inf"), float("inf"), LIMIT_AB, startTime, 2)[1]
 
-def alphabeta(board, token, alpha, beta, depth):
+def alphabeta(board, token, alpha, beta, depth, startTime, timeLimit):
+    global intermediate_move
+    if time.process_time()-startTime >= timeLimit:
+        return intermediate_move
     global seenBoards
     eToken = "XO"[token == "X"]
     if "." not in board:
@@ -31,7 +39,7 @@ def alphabeta(board, token, alpha, beta, depth):
         if not possibleMoves(board, eToken):
             return (1000 * (board.count(token) - board.count(eToken)), None)
         if depth != 0:
-            nm = alphabeta(board, eToken, -beta, -alpha, depth)
+            nm = alphabeta(board, eToken, -beta, -alpha, depth, startTime, timeLimit)
             seenBoards[(board, token)] = -nm[0]
             return (-nm[0], -1)
     if depth == 0:
@@ -51,10 +59,15 @@ def alphabeta(board, token, alpha, beta, depth):
                 continue
             if score > maxTuple[0]:
                 maxTuple = (score, move)
+                if depth == LIMIT_AB:
+                    intermediate_move = maxTuple
         else:
-            nm = alphabeta(newBoard, eToken, -beta, -alpha, depth - 1)
+            nm = alphabeta(newBoard, eToken, -beta, -alpha, depth - 1, startTime, timeLimit)
             if -nm[0] > maxTuple[0]:
                 maxTuple = (-nm[0], move)
+                alpha = max(alpha, maxTuple[0])
+                if depth == LIMIT_AB:
+                    intermediate_move = maxTuple
             seenBoards[(newBoard, token)] = -nm[0]
         if alpha > beta:
             break
