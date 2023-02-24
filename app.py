@@ -45,10 +45,12 @@ def resetPossibles(window, board):
 
 # main function
 def main():
+    global board
     clock = pygame.time.Clock()
     run = True
     mouseDown = False
     playerTurn = -1
+    possibles = possibleMoves(board, playerTurn)
     while run:
         mouseDown = False
         clock.tick(30)
@@ -60,7 +62,6 @@ def main():
             if event.type == pygame.MOUSEBUTTONDOWN:
                 mouseDown = True
         #loop over board and check for mouse actions
-        possibles = possibleMoves(board, playerTurn)
         for idx in possibles:
             square = board[idx]
             square.setColor(const.YELLOW)
@@ -68,11 +69,14 @@ def main():
             if square.rect.collidepoint(pygame.mouse.get_pos()):
                 #if mouse is hovered over square AND mouseDown, place a piece
                 if mouseDown:
+                    print(possibles)
                     resetPossibles(WINDOW,board) #reset previously marked "possible" squares
-                    square.placePiece(playerTurn)
-                    updateBoard(idx)
+                    board = updateBoard(board,playerTurn,idx)
                     playerTurn *= -1
+                    possibles = possibleMoves(board, playerTurn)
+                    break
             #update square onto window
+        for square in board:
             WINDOW.blit(square.image, square.rect)
         pygame.display.update()
 
