@@ -60,7 +60,7 @@ def main():
                 sys.exit()
             if event.type == pygame.MOUSEBUTTONDOWN:
                 mouseDown = True
-        #loop over board and check for mouse actions
+        #engine move
         if len(possibles) == 0:
             engine_idx = engine.calcMove(board, playerTurn*-1)
             if engine_idx == -1: #no possible moves
