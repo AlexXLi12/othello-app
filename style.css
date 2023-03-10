@@ -1,0 +1,19 @@
+.container {
+    height:90vh;
+    width:90vh;
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    grid-template-rows: repeat(8, 1fr);
+    margin:auto;
+}
+
+.container div {
+    margin:auto;
+    height:9.5vh;
+    width:9.5vh;
+    background-color: green;
+    border-radius: 10%;
+}
+.container div:hover {
+    background: #00ff00;
+}
