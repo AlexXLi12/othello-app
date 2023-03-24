@@ -5,15 +5,23 @@
     grid-template-columns: repeat(8, 1fr);
     grid-template-rows: repeat(8, 1fr);
     margin:auto;
+    padding-top: 4vh;
 }
 
 .container div {
-    margin:auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     height:9.5vh;
     width:9.5vh;
     background-color: green;
     border-radius: 10%;
+    border: 3px solid black;
 }
 .container div:hover {
     background: #00ff00;
+}
+img {
+    max-width: 80%;
+    max-height: 80%;
 }

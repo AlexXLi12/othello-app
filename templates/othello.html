@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Othello Game</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="{{url_for('static', filename='css/style.css')}}">
+    </head>
+    <body>
+        <div class="container" id="board"></div>
+        <script src="" async defer></script>
+    </body>
+    <script>
+        async function makeMove(position) {
+            let response = await fetch("http://localhost:5000/move?pos=" + position, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    position: position
+                })
+            });
+            let data = await response.json();
+            console.log(data);
+        }
+
+        function placePiece(position, color) {
+            let div = document.getElementById(position);
+            let img_url = 'images/' + color + '.png';
+            div.innerHTML = "<img src='static/images/"+ color +".png'>";
+        }
+
+        for(let k = 0; k < 64; k++){
+            let div = document.createElement("div");
+            div.id = "pos" + k;
+            document.getElementById("board").appendChild(div);
+            if(k == 27 || k == 36){
+                placePiece(div.id, "black");
+            }
+            if(k == 28 || k == 35){
+                placePiece(div.id, "white");
+            }
+            div.onclick = () => {
+                let id_string = ""+div.id
+                makeMove(div.id);
+                placePiece(div.id, "black");
+            }
+        }
+    </script>
+</html>
