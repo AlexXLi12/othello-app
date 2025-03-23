@@ -9,10 +9,36 @@
         <link rel="stylesheet" href="{{url_for('static', filename='css/style.css')}}">
     </head>
     <body>
+        <h1>To move: <span id="player-turn">black</span></h1>
         <div class="container" id="board"></div>
         <script src="" async defer></script>
     </body>
     <script>
+        // create board with starting pieces
+        for(let k = 0; k < 64; k++){
+            let div = document.createElement("div");
+            div.id = "pos" + k;
+            document.getElementById("board").appendChild(div);
+            // start state
+            if(k == 27 || k == 36){
+                placePiece(div.id, "white");
+            }
+            if(k == 28 || k == 35){
+                placePiece(div.id, "black");
+            }
+            div.onclick = async () => {
+                let id_string = ""+div.id
+                let res = await makeMove(div.id);
+                renderBoard(res.board, res.possible_moves);
+                player_turn = res.to_move;
+                if (player_turn == "O"){
+                    document.getElementById("player-turn").innerText = "white";
+                } else {
+                    document.getElementById("player-turn").innerText = "black";
+                }
+            }
+        }
+
         async function makeMove(position) {
             let response = await fetch("http://localhost:5000/move?pos=" + position, {
                 method: "POST",
@@ -25,6 +51,7 @@
             });
             let data = await response.json();
             console.log(data);
+            return data;
         }
 
         function placePiece(position, color) {
@@ -33,21 +60,23 @@
             div.innerHTML = "<img src='static/images/"+ color +".png'>";
         }
 
-        for(let k = 0; k < 64; k++){
-            let div = document.createElement("div");
-            div.id = "pos" + k;
-            document.getElementById("board").appendChild(div);
-            if(k == 27 || k == 36){
-                placePiece(div.id, "black");
-            }
-            if(k == 28 || k == 35){
-                placePiece(div.id, "white");
-            }
-            div.onclick = () => {
-                let id_string = ""+div.id
-                makeMove(div.id);
-                placePiece(div.id, "black");
+        function renderBoard(board, possible_moves) {
+            for(let k = 0; k < 64; k++){
+                let div = document.getElementById("pos" + k);
+                let color = board[k];
+                if(possible_moves.includes(k)){
+                    div.style.backgroundColor = "yellow";
+                } else {
+                    div.style.backgroundColor = "green";
+                }
+                if(color == "X"){
+                    placePiece(div.id, "black");
+                }
+                if(color == "O"){
+                    placePiece(div.id, "white");
+                }
             }
         }
+
     </script>
 </html>
