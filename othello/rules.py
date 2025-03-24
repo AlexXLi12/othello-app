@@ -181,3 +181,22 @@ def check_move(board, idx, nbrIdx, target):
                 return -1
             nextIdx += diff
     return -1
+
+def get_winner(board:list):
+    """Returns winner of the game. Assumes game is over.
+
+    Args:
+        board (list[str]): list of strings representing the Othello board
+
+    Returns:
+        str: 'X' if black wins, 'O' if white wins, 'TIE' if tie
+    """
+
+    black = board.count('X')
+    white = board.count('O')
+    if black > white:
+        return 'X'
+    elif white > black:
+        return 'O'
+    else:
+        return 'TIE'

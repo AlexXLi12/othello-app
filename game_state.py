@@ -37,4 +37,9 @@ class GameState:
         self.move_history.append(move)
         self.to_move = 'X' if self.to_move == 'O' else 'O'
         self.possible_moves = othello.rules.get_possible_moves(self.board, self.to_move)
+        if len(self.possible_moves) == 0:
+            self.to_move = 'X' if self.to_move == 'O' else 'O'
+            self.possible_moves = othello.rules.get_possible_moves(self.board, self.to_move)
+        if len(self.possible_moves) == 0:
+            self.winner = othello.rules.get_winner(self.board)
         return True
