@@ -1,22 +1,14 @@
-
-async function getState() {
-    let response = await fetch("http://localhost:5000/state", {
-        method: "GET",
-        headers: {
-            "Content-Type": "application/json"
-        }
-    });
-    let data = await response.json();
-    return data;
-}
 // create board with starting pieces
+let resetButton = document.getElementById("reset");
+resetButton.onclick = resetGame;
+
+
 let res = getState();
 for(let k = 0; k < 64; k++){
     let div = document.createElement("div");
     div.id = "pos" + k;
     document.getElementById("board").appendChild(div);
     div.onclick = async () => {
-        let id_string = ""+div.id
         let res = await makeMove(div.id);
         renderBoard(res.board, res.possible_moves);
         if (res.winner != null) {
@@ -39,6 +31,7 @@ for(let k = 0; k < 64; k++){
         }
     }
 }
+
 res.then((data) => {
     renderBoard(data.board, data.possible_moves);
     if (data.to_move == "O"){
@@ -49,6 +42,17 @@ res.then((data) => {
 }, (error) => {
     console.log(error);
 });
+
+async function getState() {
+    let response = await fetch("http://localhost:5000/state", {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json"
+        }
+    });
+    let data = await response.json();
+    return data;
+}
 
 async function makeMove(position) {
     let response = await fetch("http://localhost:5000/move?pos=" + position, {
@@ -71,19 +75,47 @@ function placePiece(position, color) {
 }
 
 function renderBoard(board, possible_moves) {
-    for(let k = 0; k < 64; k++){
+    let blackScore = 0;
+    let whiteScore = 0;
+    for (let k = 0; k < 64; k++) {
         let div = document.getElementById("pos" + k);
         let color = board[k];
-        if(possible_moves.includes(k)){
-            div.style.backgroundColor = "yellow";
+        // Remove any existing classes
+        div.classList.remove("possible-move", "default-tile");
+
+        // Add classes based on the board state
+        if (possible_moves.includes(k)) {
+            div.classList.add("possible-move");
         } else {
-            div.style.backgroundColor = "green";
+            div.classList.add("default-tile");
         }
-        if(color == "X"){
+        if (color == "X") {
             placePiece(div.id, "black");
-        }
-        if(color == "O"){
+            blackScore++;
+        } else if (color == "O") {
             placePiece(div.id, "white");
+            whiteScore++;
+        } else {
+            div.innerHTML = "";
         }
+    }
+    document.getElementById("black-score").innerText = blackScore;
+    document.getElementById("white-score").innerText = whiteScore;
+}
+
+async function resetGame() {
+    let response = await fetch("http://localhost:5000/reset", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        }
+    });
+    let data = await response.json();
+    console.log(data);
+    renderBoard(data.board, data.possible_moves);
+    if (data.to_move == "O"){
+            document.getElementById("player-turn").innerText = "white";
+    } else {
+        document.getElementById("player-turn").innerText = "black";
     }
 }

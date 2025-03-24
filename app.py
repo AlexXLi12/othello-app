@@ -43,5 +43,17 @@ def get_state():
                      'possible_moves': list(game.possible_moves)}
     return jsonify(response_data)
 
+@app.route('/reset', methods=['POST'])
+def reset_game():
+    global game
+    game = GameState()
+    response_data = {'board': game.board,
+                     'to_move': game.to_move,
+                     'winner': game.winner,
+                     'possible_moves': list(game.possible_moves),
+                     'message': 'Game reset.'}
+    return jsonify(response_data)
+
+
 if __name__ == '__main__':
     app.run(debug=True)

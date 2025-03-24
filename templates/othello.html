@@ -1,16 +1,26 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title>Othello Game</title>
-        <meta name="description" content="">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="{{url_for('static', filename='css/style.css')}}">
-    </head>
-    <body>
-        <h1>To move: <span id="player-turn">black</span></h1>
-        <div class="container" id="board"></div>
-        <script src="static/js/index.js" defer></script>
-    </body>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Othello Game</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="{{url_for('static', filename='css/style.css')}}">
+</head>
+
+<body>
+    <h1>To move: <span id="player-turn">black</span></h1>
+    <div class="container" id="board"></div>
+    <div class="bottom-container">
+        <div class="score-container">
+            <p>Black Score: <span id="black-score">2</span></p>
+            <p>White Score: <span id="white-score">2</span></p>
+        </div>
+        <button id="reset">Reset</button>
+    </div>
+    <script src="static/js/index.js" defer></script>
+</body>
+
 </html>
