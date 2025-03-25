@@ -26,6 +26,22 @@ def calcMove(board:list[Square], player:int):
     #default depth 6
     return alphabeta(board, token, float("-inf"), float("inf"), LIMIT_AB, startTime, 2)[1]
 
+
+def calc_move(board: list[str], to_move: str):
+    """Return the index of the engine's move
+
+    Args:
+        board (list[str]): list of strings representing the board
+        to_move (str): str which specifies whose turn it is ('X' == black, 'O' == white)
+    """
+    # board is filled
+    if '.' not in board:
+        return -1
+    board = "".join(board)
+    startTime = time.process_time()
+    # default depth 6
+    return alphabeta(board, to_move, float("-inf"), float("inf"), LIMIT_AB, startTime, 2)[1]
+
 def alphabeta(board, token, alpha, beta, depth, startTime, timeLimit):
     global intermediate_move
     if time.process_time()-startTime >= timeLimit:

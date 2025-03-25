@@ -10,6 +10,22 @@ for(let k = 0; k < 64; k++){
     document.getElementById("board").appendChild(div);
     div.onclick = async () => {
         let res = await makeMove(div.id);
+        renderBoard(res.board, []);
+        if (res.winner != null) {
+            let winner;
+            if (res.winner == "X") {
+                winner = "black";
+                alert("Winner is: black");
+            } else if (res.winner == "O") {
+                alert("Winner is: white");
+                winner = "white";
+            } else {
+                alert("Tie!");
+            }
+        }
+        // get engine move
+        res = await getEngineMove();
+        console.log('rendering engine move');
         renderBoard(res.board, res.possible_moves);
         if (res.winner != null) {
             let winner;
@@ -45,6 +61,17 @@ res.then((data) => {
 
 async function getState() {
     let response = await fetch("http://localhost:5000/state", {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json"
+        }
+    });
+    let data = await response.json();
+    return data;
+}
+
+async function getEngineMove() {
+    let response = await fetch("http://localhost:5000/engine", {
         method: "GET",
         headers: {
             "Content-Type": "application/json"

@@ -20,7 +20,7 @@ class GameState:
     def __eq__(self, other):
         return self.board == other.board
     
-    def make_move(self, move):
+    def make_move(self, move, engine=False):
         """Make a move on the board.
 
         Parameters:
@@ -31,15 +31,17 @@ class GameState:
         """
         # check if move is valid
         if move not in self.possible_moves:
+            print('move not possible')
             return False
         # move is valid; update game state
         self.board = othello.rules.update_board(self.board, self.to_move, move)
-        self.move_history.append(move)
+        self.move_history.append((self.to_move, move))
         self.to_move = 'X' if self.to_move == 'O' else 'O'
         self.possible_moves = othello.rules.get_possible_moves(self.board, self.to_move)
         if len(self.possible_moves) == 0:
             self.to_move = 'X' if self.to_move == 'O' else 'O'
             self.possible_moves = othello.rules.get_possible_moves(self.board, self.to_move)
+        # if both players have no possible moves, game is over
         if len(self.possible_moves) == 0:
             self.winner = othello.rules.get_winner(self.board)
         return True
