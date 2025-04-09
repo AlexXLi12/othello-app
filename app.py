@@ -15,10 +15,11 @@ def index():
 
 @app.route('/create_game', methods=['POST'])
 def create_game_obj():
-    depth_limit = request.args.get('depth_limit', '6')
-    time_limit = request.args.get('time_limit', '2')
+    depth_limit = request.form.get('engine_depth', '6')
+    time_limit = request.form.get('time_limit', '2')
     depth_limit = int(depth_limit)
     time_limit = float(time_limit)
+    print(depth_limit, time_limit)
     global game
     game = GameState(depth_limit, time_limit)  # reset game state
     return render_template('othello.html')
@@ -35,7 +36,6 @@ def move_request():
     move = request.args.get('pos' ,'')
     if move:
         move = move[3:]
-    print(move)
     is_valid = game.make_move(int(move))
     if not is_valid:
         response_data = {'board': game.board,
