@@ -6,13 +6,23 @@ app = Flask(__name__)
 CORS(app, origins="http://127.0.0.1:5000")
 
 # global game state variables
-game = GameState()
+global game
 
 @app.route('/')
 def index():
     global game
-    game = GameState()  # reset game state
+    return render_template('index.html')
+
+@app.route('/create_game', methods=['POST'])
+def create_game_obj():
+    depth_limit = request.args.get('depth_limit', '6')
+    time_limit = request.args.get('time_limit', '2')
+    depth_limit = int(depth_limit)
+    time_limit = float(time_limit)
+    global game
+    game = GameState(depth_limit, time_limit)  # reset game state
     return render_template('othello.html')
+
 
 @app.route('/move', methods=['POST'])
 def move_request():
@@ -49,7 +59,7 @@ def get_engine_move():
                         'winner': game.winner,
                         'possible_moves': list(game.possible_moves),
                         'message': "Not engine's move"})
-    move = engine.calc_move(game.board, game.to_move)
+    move = engine.calc_move(game.board, game.to_move, game.engine_depth, game.engine_time)
     if move != -1:
         game.make_move(move, engine=True)
         response_data = {'board': game.board,
@@ -78,7 +88,9 @@ def get_state():
 @app.route('/reset', methods=['POST'])
 def reset_game():
     global game
-    game = GameState()
+    depth_limit = game.engine_depth
+    time_limit = game.engine_time
+    game = GameState(depth_limit, time_limit)  # reset game state
     response_data = {'board': game.board,
                      'to_move': game.to_move,
                      'winner': game.winner,

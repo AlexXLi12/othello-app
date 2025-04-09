@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Start Othello Game</title>
+</head>
+<body>
+    <h1>New Othello Game</h1>
+    <form action="/create_game" method="post">
+        <div>
+            <label for="engine_depth">Engine Depth:</label>
+            <input type="range" id="engine_depth" name="engine_depth" 
+                   min="1" max="10" value="3" step="1" required>
+            <span id="depth_value">3</span>
+            <script>
+                const slider = document.getElementById('engine_depth');
+                const output = document.getElementById('depth_value');
+                slider.oninput = function() {
+                    output.textContent = this.value;
+                }
+            </script>
+        </div>
+        <div>
+            <label for="time_limit">Time Limit (seconds):</label>
+            <input type="number" id="time_limit" name="time_limit" 
+                   min="0.5" max="5" value="2" required>
+        </div>
+        <button type="submit">Start Game</button>
+    </form>
+</body>
+</html>

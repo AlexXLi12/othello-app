@@ -22,12 +22,12 @@ def calcMove(board:list[Square], player:int):
     #board is filled
     if '.' not in board:
         return -1
-    startTime = time.process_time()
+    startTime = time.time()
     #default depth 6
     return alphabeta(board, token, float("-inf"), float("inf"), LIMIT_AB, startTime, 2)[1]
 
 
-def calc_move(board: list[str], to_move: str):
+def calc_move(board: list[str], to_move: str, depth_limit: int = LIMIT_AB, time_limit: float = 2):
     """Return the index of the engine's move
 
     Args:
@@ -38,13 +38,13 @@ def calc_move(board: list[str], to_move: str):
     if '.' not in board:
         return -1
     board = "".join(board)
-    startTime = time.process_time()
+    startTime = time.time()
     # default depth 6
-    return alphabeta(board, to_move, float("-inf"), float("inf"), LIMIT_AB, startTime, 2)[1]
+    return alphabeta(board, to_move, float("-inf"), float("inf"), depth_limit, startTime, time_limit)[1]
 
 def alphabeta(board, token, alpha, beta, depth, startTime, timeLimit):
     global intermediate_move
-    if time.process_time()-startTime >= timeLimit:
+    if time.time()-startTime >= timeLimit:
         return intermediate_move
     global seenBoards
     eToken = "XO"[token == "X"]

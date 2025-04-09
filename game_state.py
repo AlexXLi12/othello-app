@@ -4,11 +4,13 @@ class GameState:
     """
     Represents the game state of an Othello game.
     """
-    def __init__(self):
+    def __init__(self, engine_depth: int, engine_time: float):
         self.board = ['.'] * 27 + ['O', 'X'] + ['.'] * 6 + ['X', 'O'] + ['.'] * 27
         self.to_move = 'X' # X = black, O = white
         self.possible_moves = othello.rules.get_possible_moves(self.board, self.to_move)
         self.move_history = []
+        self.engine_depth = engine_depth
+        self.engine_time = engine_time
         self.winner = None
     
     def __str__(self):
