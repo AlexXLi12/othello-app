@@ -33,6 +33,7 @@ def calc_move(board: list[str], to_move: str, depth_limit: int = LIMIT_AB, time_
         board (list[str]): list of strings representing the board
         to_move (str): str which specifies whose turn it is ('X' == black, 'O' == white)
     """
+    global seenBoards
     # board is filled
     if '.' not in board:
         return -1
@@ -43,6 +44,7 @@ def calc_move(board: list[str], to_move: str, depth_limit: int = LIMIT_AB, time_
     current_depth = 0
     best_score, best_move = float("-inf"), -1
     while time.time() - startTime < time_limit and current_depth < depth_limit:
+        seenBoards = dict()
         current_depth += 1
         score, move = alphabeta(board, to_move, float("-inf"), float("inf"), current_depth, startTime, time_limit)
         if move == -2:
