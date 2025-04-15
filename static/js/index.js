@@ -25,6 +25,7 @@ for(let k = 0; k < 64; k++){
         }
         // get engine move
         res = await getEngineMove();
+        console.log(res);
         console.log('rendering engine move');
         renderBoard(res.board, res.possible_moves);
         if (res.winner != null) {

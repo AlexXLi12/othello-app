@@ -2,7 +2,6 @@ from .constants import *
 from .classes import Square
 import time
 moveBoards = {}
-intermediate_move = -1
 LIMIT_AB = 6
 def sortMoves(possibles):
     cnrs = [*possibles & corners]
@@ -40,12 +39,14 @@ def calc_move(board: list[str], to_move: str, depth_limit: int = LIMIT_AB, time_
     board = "".join(board)
     startTime = time.time()
     # default depth 6
-    return alphabeta(board, to_move, float("-inf"), float("inf"), depth_limit, startTime, time_limit)[1]
+    # iterative deepening
+    current_depth = 0
+    while time.time() - startTime < time_limit:
+        current_depth += 1
+        move = alphabeta(board, to_move, float("-inf"), float("inf"), depth_limit, startTime, time_limit)[1]
+    return move
 
 def alphabeta(board, token, alpha, beta, depth, startTime, timeLimit):
-    global intermediate_move
-    if time.time()-startTime >= timeLimit:
-        return intermediate_move
     global seenBoards
     eToken = "XO"[token == "X"]
     if "." not in board:
@@ -53,12 +54,16 @@ def alphabeta(board, token, alpha, beta, depth, startTime, timeLimit):
     possibles = possibleMoves(board, token)
     if not possibles:
         if not possibleMoves(board, eToken):
+            # end game
             return (1000 * (board.count(token) - board.count(eToken)), None)
         if depth != 0:
+            # pass turn
             nm = alphabeta(board, eToken, -beta, -alpha, depth, startTime, timeLimit)
             seenBoards[(board, token)] = -nm[0]
             return (-nm[0], -1)
     if depth == 0:
+        # depth limit reached
+        # calculate score and return
         score = calculateBoardScore(board, token)
         seenBoards[(board, token)] = score
         return (score, None)
@@ -69,21 +74,15 @@ def alphabeta(board, token, alpha, beta, depth, startTime, timeLimit):
         newBoard = makeMove(move, board, token)
         if (newBoard, token) in seenBoards:
             score = seenBoards[(newBoard, token)]
-            if (
-                score <= maxTuple[0]
-            ):  # if board score <= current max, ignore and continue
+            if score <= maxTuple[0]:  # if board score <= current max, ignore and continue
                 continue
             if score > maxTuple[0]:
                 maxTuple = (score, move)
-                if depth == LIMIT_AB:
-                    intermediate_move = maxTuple
         else:
             nm = alphabeta(newBoard, eToken, -beta, -alpha, depth - 1, startTime, timeLimit)
             if -nm[0] > maxTuple[0]:
                 maxTuple = (-nm[0], move)
                 alpha = max(alpha, maxTuple[0])
-                if depth == LIMIT_AB:
-                    intermediate_move = maxTuple
             seenBoards[(newBoard, token)] = -nm[0]
         if alpha > beta:
             break

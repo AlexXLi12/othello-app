@@ -1,3 +1,4 @@
+import time
 from flask import Flask, render_template, url_for, request, jsonify
 from flask_cors import CORS
 from game_state import GameState
@@ -59,14 +60,17 @@ def get_engine_move():
                         'winner': game.winner,
                         'possible_moves': list(game.possible_moves),
                         'message': "Not engine's move"})
+    startTime = time.time()
     move = engine.calc_move(game.board, game.to_move, game.engine_depth, game.engine_time)
+    total_time = time.time() - startTime
     if move != -1:
         game.make_move(move, engine=True)
         response_data = {'board': game.board,
                     'to_move': game.to_move,
                     'winner': game.winner,
                     'possible_moves': list(game.possible_moves),
-                    'message': 'Engine moved to {}.'.format(move)}
+                    'message': 'Engine moved to {}.'.format(move),
+                    'time': total_time}
     else:
         # engine has no valid moves; give turn to player
         response_data = {'board': game.board,
