@@ -11,17 +11,16 @@ global game
 
 @app.route('/')
 def index():
-    global game
     return render_template('index.html')
 
 @app.route('/create_game', methods=['POST'])
 def create_game_obj():
+    global game
     depth_limit = request.form.get('engine_depth', '6')
     time_limit = request.form.get('time_limit', '2')
     depth_limit = int(depth_limit)
     time_limit = float(time_limit)
     print(depth_limit, time_limit)
-    global game
     game = GameState(depth_limit, time_limit)  # reset game state
     return render_template('othello.html')
 

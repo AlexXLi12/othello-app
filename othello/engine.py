@@ -41,13 +41,25 @@ def calc_move(board: list[str], to_move: str, depth_limit: int = LIMIT_AB, time_
     # default depth 6
     # iterative deepening
     current_depth = 0
-    while time.time() - startTime < time_limit:
+    best_score, best_move = float("-inf"), -1
+    while time.time() - startTime < time_limit and current_depth < depth_limit:
         current_depth += 1
-        move = alphabeta(board, to_move, float("-inf"), float("inf"), depth_limit, startTime, time_limit)[1]
-    return move
+        score, move = alphabeta(board, to_move, float("-inf"), float("inf"), current_depth, startTime, time_limit)
+        if move == -2:
+            print('Time limit reached')
+            break
+        if score > best_score:
+            best_score = score
+            best_move = move
+    print('depth reached:', current_depth)
+    print('move:', best_move)
+    print('score:', best_score)
+    return best_move
 
 def alphabeta(board, token, alpha, beta, depth, startTime, timeLimit):
     global seenBoards
+    if time.time() - startTime > timeLimit:
+        return (float('-inf'), -2)
     eToken = "XO"[token == "X"]
     if "." not in board:
         return (1000 * (board.count(token) - board.count(eToken)), None)
@@ -59,6 +71,8 @@ def alphabeta(board, token, alpha, beta, depth, startTime, timeLimit):
         if depth != 0:
             # pass turn
             nm = alphabeta(board, eToken, -beta, -alpha, depth, startTime, timeLimit)
+            if nm[1] == -2:
+                return nm
             seenBoards[(board, token)] = -nm[0]
             return (-nm[0], -1)
     if depth == 0:
@@ -80,6 +94,8 @@ def alphabeta(board, token, alpha, beta, depth, startTime, timeLimit):
                 maxTuple = (score, move)
         else:
             nm = alphabeta(newBoard, eToken, -beta, -alpha, depth - 1, startTime, timeLimit)
+            if nm[1] == -2:
+                return nm
             if -nm[0] > maxTuple[0]:
                 maxTuple = (-nm[0], move)
                 alpha = max(alpha, maxTuple[0])
