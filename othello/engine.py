@@ -159,7 +159,10 @@ def calculateBoardScore(board, token):
             total += 3
         elif board[idx] == eToken:
             total -= 3
-    return total + len(removeBad(possibleMoves(board, token), board, token)) * 10
+    len(removeBad(possibleMoves(board, token), board, token)) * 10
+    len(removeBad(possibleMoves(board, eToken), board, eToken)) * 10
+    move_diff = len(possibleMoves(board, token)) - len(possibleMoves(board, eToken))
+    return total + move_diff
 
 def makeMove(moveIdx, board, toMove):
     if (moveIdx, board, toMove) in moveBoards:
