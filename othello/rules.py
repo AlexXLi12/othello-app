@@ -1,4 +1,3 @@
-from .classes import Square
 from .constants import *
 
 def possibleMoves(board:list, player:int):

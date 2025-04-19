@@ -1,14 +1,3 @@
-import pygame
-
-WIDTH, HEIGHT = 600, 600
-ROWS, COLS = 8, 8
-
-#rgb
-BLACK = (0,0,0)
-WHITE = (255,255,255)
-GREEN = (34,139,34)
-YELLOW = (255,255,0)
-
 #Othello board important indices
 corners = {0, 7, 63, 56}
 edges = {

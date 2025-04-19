@@ -1,5 +1,4 @@
 from .constants import *
-from .classes import Square
 import time
 moveBoards = {}
 LIMIT_AB = 6
@@ -8,23 +7,6 @@ def sortMoves(possibles):
     asqrs = [*possibles & asquares]
     rest = possibles - corners
     return [*cnrs, *asqrs, *rest]
-
-def calcMove(board:list[Square], player:int):
-    """Return the index of the engine's move
-
-    Args:
-        board (list[Square]): _description_
-        player (int): int which specifies whose turn it is (-1 == black, 1 == white)
-    """
-    board = ''.join(['X' if square.player == -1 else 'O' if square.player == 1 else '.'for square in board])
-    token = 'X' if player == -1 else 'O'
-    #board is filled
-    if '.' not in board:
-        return -1
-    startTime = time.time()
-    #default depth 6
-    return alphabeta(board, token, float("-inf"), float("inf"), LIMIT_AB, startTime, 2)[1]
-
 
 def calc_move(board: list[str], to_move: str, depth_limit: int = LIMIT_AB, time_limit: float = 2):
     """Return the index of the engine's move
