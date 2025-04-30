@@ -1,5 +1,6 @@
 {
   "files.associations": {
     "utility": "cpp"
-  }
+  },
+  "cmake.sourceDirectory": "/home/alex/coding/othello-app/cpp"
 }

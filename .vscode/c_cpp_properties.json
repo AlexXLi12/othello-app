@@ -1,7 +1,7 @@
 {
     "configurations": [
         {
-            "name": "Win32",
+            "name": "Linux",
             "includePath": [
                 "${workspaceFolder}/cpp/src",
                 "${workspaceFolder}/cpp/tests",
@@ -9,12 +9,9 @@
                 "${workspaceFolder}/**"
             ],
             "defines": [
-                "_DEBUG",
-                "UNICODE",
-                "_UNICODE"
+                "_DEBUG"
             ],
-            "windowsSdkVersion": "10.0.19041.0",
-            "compilerPath": "C:\\msys64\\ucrt64\\bin\\g++.exe",
+            "compilerPath": "/usr/bin/g++",
             "cStandard": "c23",
             "cppStandard": "c++23",
             "intelliSenseMode": "${default}"
