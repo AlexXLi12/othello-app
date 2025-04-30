@@ -3,6 +3,9 @@
         {
             "name": "Win32",
             "includePath": [
+                "${workspaceFolder}/cpp/src",
+                "${workspaceFolder}/cpp/tests",
+                "${workspaceFolder}/cpp/build/_deps/googletest-src/googletest/include",
                 "${workspaceFolder}/**"
             ],
             "defines": [
