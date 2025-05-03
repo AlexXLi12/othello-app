@@ -2,5 +2,9 @@
   "files.associations": {
     "utility": "cpp"
   },
-  "cmake.sourceDirectory": "/home/alex/coding/othello-app/cpp"
+  "cmake.sourceDirectory": "/home/alex/coding/othello-app/cpp",
+  "[cpp]": {
+    "editor.tabSize": 2,
+    "editor.insertSpaces": true
+  }
 }
