@@ -217,12 +217,20 @@
             <textarea id="black-bitboard" readonly></textarea>
             <button id="copy-black-button">Copy Black</button>
           </div>
+          <div style="display: flex; gap: 10px; margin-bottom: 10px;">
+            <input type="text" id="black-hex-input" placeholder="Paste black bitboard hex" style="flex: 1;">
+            <button id="update-black-button">Update Black</button>
+          </div>
         </div>
         <div>
           <label for="white-bitboard">White (0x<span id="white-hex">0</span>):</label>
           <div style="display: flex; gap: 10px;">
             <textarea id="white-bitboard" readonly></textarea>
             <button id="copy-white-button">Copy White</button>
+          </div>
+          <div style="display: flex; gap: 10px; margin-bottom: 10px;">
+            <input type="text" id="white-hex-input" placeholder="Paste white bitboard hex" style="flex: 1;">
+            <button id="update-white-button">Update White</button>
           </div>
         </div>
       </div>
@@ -273,6 +281,10 @@
     const blackMovesCountElement = document.getElementById('black-moves-count');
     const whiteMovesCountElement = document.getElementById('white-moves-count');
     const movesListElement = document.getElementById('moves-list');
+    const blackHexInput = document.getElementById('black-hex-input');
+    const whiteHexInput = document.getElementById('white-hex-input');
+    const updateBlackButton = document.getElementById('update-black-button');
+    const updateWhiteButton = document.getElementById('update-white-button');
     
     // Initialize the board
     function initBoard() {
@@ -540,6 +552,46 @@
         .catch(err => console.error('Failed to copy: ', err));
     }
 
+    // Update black bitboard from input
+    function updateBlackBitboard() {
+      const hexValue = blackHexInput.value.trim();
+      if (!/^0x[0-9a-fA-F]+$/.test(hexValue)) {
+        showToast('Invalid hex value for black bitboard');
+        return;
+      }
+      const bitboard = BigInt(hexValue);
+      for (let i = 0; i < 64; i++) {
+        const bit = 1n << BigInt(i);
+        if (bitboard & bit) {
+          board[i] = BLACK;
+        } else if (board[i] === BLACK) {
+          board[i] = EMPTY;
+        }
+      }
+      updateBoardDisplay();
+      updateGameState();
+    }
+
+    // Update white bitboard from input
+    function updateWhiteBitboard() {
+      const hexValue = whiteHexInput.value.trim();
+      if (!/^0x[0-9a-fA-F]+$/.test(hexValue)) {
+        showToast('Invalid hex value for white bitboard');
+        return;
+      }
+      const bitboard = BigInt(hexValue);
+      for (let i = 0; i < 64; i++) {
+        const bit = 1n << BigInt(i);
+        if (bitboard & bit) {
+          board[i] = WHITE;
+        } else if (board[i] === WHITE) {
+          board[i] = EMPTY;
+        }
+      }
+      updateBoardDisplay();
+      updateGameState();
+    }
+
     // Show a non-intrusive toast notification
     function showToast(message) {
     // Create toast element if it doesn't exist yet
@@ -568,6 +620,21 @@
     clearMovesButton.addEventListener('click', clearHighlights);
     copyBlackButton.addEventListener('click', copyBlackBitboard);
     copyWhiteButton.addEventListener('click', copyWhiteBitboard);
+    updateBlackButton.addEventListener('click', updateBlackBitboard);
+    updateWhiteButton.addEventListener('click', updateWhiteBitboard);
+    
+    // Add keyboard event listeners for the input fields
+    blackHexInput.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') {
+        updateBlackBitboard();
+      }
+    });
+    
+    whiteHexInput.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') {
+        updateWhiteBitboard();
+      }
+    });
     
     turnSelector.addEventListener('change', () => {
       const selectedTurn = turnSelector.value;
