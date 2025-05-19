@@ -1,8 +1,8 @@
 from .constants import *
 import time
-moveBoards = {}
+moveBoards: dict[tuple[int, str, str], str] = {}
 LIMIT_AB = 6
-def sortMoves(possibles):
+def sortMoves(possibles: set[int]):
     cnrs = [*possibles & corners]
     asqrs = [*possibles & asquares]
     rest = possibles - corners
@@ -19,16 +19,16 @@ def calc_move(board: list[str], to_move: str, depth_limit: int = LIMIT_AB, time_
     # board is filled
     if '.' not in board:
         return -1
-    board = "".join(board)
+    board_str = "".join(board)
     startTime = time.time()
     # default depth 6
     # iterative deepening
     current_depth = 0
     best_score, best_move = float("-inf"), -1
     while time.time() - startTime < time_limit and current_depth < depth_limit:
-        seenBoards = dict()
+        seenBoards: dict[tuple[str, str], float|int] = dict()
         current_depth += 1
-        score, move = alphabeta(board, to_move, float("-inf"), float("inf"), current_depth, startTime, time_limit)
+        score, move = alphabeta(board_str, to_move, float("-inf"), float("inf"), current_depth, startTime, time_limit)
         if move == -2:
             print('Time limit reached')
             break
@@ -40,14 +40,14 @@ def calc_move(board: list[str], to_move: str, depth_limit: int = LIMIT_AB, time_
     print('score:', best_score)
     return best_move
 
-def alphabeta(board, token, alpha, beta, depth, startTime, timeLimit):
+def alphabeta(board: str, token: str, alpha: float, beta: float, depth: int, startTime: float, timeLimit: float) -> tuple[int|float, int|float|None]:
     global seenBoards
     if time.time() - startTime > timeLimit:
         return (float('-inf'), -2)
     eToken = "XO"[token == "X"]
     if "." not in board:
         return (1000 * (board.count(token) - board.count(eToken)), None)
-    possibles = possibleMoves(board, token)
+    possibles: set[int] = possibleMoves(board, token)
     if not possibles:
         if not possibleMoves(board, eToken):
             # end game
@@ -65,7 +65,7 @@ def alphabeta(board, token, alpha, beta, depth, startTime, timeLimit):
         score = calculateBoardScore(board, token)
         seenBoards[(board, token)] = score
         return (score, None)
-    maxTuple = (float("-inf"), ())
+    maxTuple = (float("-inf"), None)
     psbls_sorted = sortMoves(possibles)
     # looping through moves
     for move in psbls_sorted:
@@ -89,7 +89,7 @@ def alphabeta(board, token, alpha, beta, depth, startTime, timeLimit):
     return maxTuple
 
 seenBoards = dict()
-def calculateBoardScore(board, token):
+def calculateBoardScore(board: str, token: str):
     # evaluates based on csquares, xsquares, asquares, bsquares, corners, and center4
     eToken = "XO"[token == "X"]
     total = 0
@@ -141,12 +141,10 @@ def calculateBoardScore(board, token):
             total += 3
         elif board[idx] == eToken:
             total -= 3
-    len(removeBad(possibleMoves(board, token), board, token)) * 10
-    len(removeBad(possibleMoves(board, eToken), board, eToken)) * 10
     move_diff = len(possibleMoves(board, token)) - len(possibleMoves(board, eToken))
     return total + move_diff
 
-def makeMove(moveIdx, board, toMove):
+def makeMove(moveIdx: int, board: str, toMove: str) -> str:
     if (moveIdx, board, toMove) in moveBoards:
         return moveBoards[(moveIdx, board, toMove)]
     lst = list(board)
@@ -164,8 +162,8 @@ def makeMove(moveIdx, board, toMove):
     moveBoards[(moveIdx, board, toMove)] = "".join(lst)
     return "".join(lst)
 
-seenpsbls = {}
-def possibleMoves(board, toMove):
+seenpsbls: dict[tuple[str, str], set[int]]  = {}
+def possibleMoves(board: str, toMove: str) -> set[int]:
     global seenpsbls
     if (board, toMove) in seenpsbls:
         return seenpsbls[(board, toMove)]
@@ -176,7 +174,7 @@ def possibleMoves(board, toMove):
     else:
         other = "."
         target = toMove
-    possibleMoves = set()
+    possibleMoves: set[int] = set()
     for pos in range(64):
         if board[pos] != other:
             continue
@@ -193,9 +191,9 @@ def possibleMoves(board, toMove):
     seenpsbls[(board, toMove)] = possibleMoves
     return possibleMoves
 
-def removeBad(moves, board, token):
-    moves = list(moves)
+def removeBad(moves: set[int], board: str, token: str):
+    moves_list = list(moves)
     for move in moves:
         if move in cxsquaresToCorner and board[cxsquaresToCorner[move]] != token:
-            moves.pop(moves.index(move))
+            _ = moves_list.pop(moves_list.index(move))
     return set(moves)

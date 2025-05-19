@@ -6,12 +6,12 @@ edges = {
 xsquares = {9, 14, 49, 54}
 csquares = {1, 6, 8, 15, 48, 55, 57, 62}
 asquares = {2, 5, 16, 23, 40, 47, 58, 61}
-cornerDirections = dict()
+cornerDirections: dict[int, list[int]] = dict()
 cornerDirections[0] = [1, 8]
 cornerDirections[7] = [-1, 8]
 cornerDirections[63] = [-1, -8]
 cornerDirections[56] = [1, -8]
-asquarePairs = dict()
+asquarePairs: dict[int, int] = dict()
 asquarePairs[2] = 5
 asquarePairs[5] = 2
 asquarePairs[16] = 40
@@ -24,9 +24,9 @@ bsquares = {3, 4, 24, 31, 32, 39, 59, 60}
 center4 = {27, 28, 35, 36}
 
 
-neighbors = []
+neighbors: list[list[int]] = []
 for k in range(64):
-    curr = []
+    curr: list[int] = []
     if k % 8 != 7: curr.append(k+1)
     if k % 8 != 0: curr.append(k-1)
     if k-8 >= 0: curr.append(k-8)
@@ -37,7 +37,7 @@ for k in range(64):
     if k-7 >= 0: curr.append(k-7)
     neighbors.append(curr)
 
-cxsquaresToCorner = dict()
+cxsquaresToCorner: dict[int, int] = dict()
 for move in xsquares.union(csquares):
     for idx in neighbors[move]:
         for corner in corners:
@@ -45,9 +45,9 @@ for move in xsquares.union(csquares):
                 cxsquaresToCorner[move] = corner
 
 rays = [[idx - k for idx in neighbors[k]] for k in range(64)]
-bounds = []
+bounds: list[list[int]] = []
 for idx in range(64):
-    tmp = []
+    tmp: list[int] = []
     for diff in rays[idx]:
         nextIdx = idx + diff
         if abs(diff) == 8:  # vertical case
